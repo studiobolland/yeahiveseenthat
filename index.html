@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Car Game</title>
+  <title>Play – Itch.io Embed</title>
   <meta name="description" content="A minimal, fully responsive shell to embed an itch.io game." />
   <link rel="icon" href="/favicon.ico" />
   <style>
@@ -12,8 +12,9 @@
       --card:#131922;
       --fg:#e9eef3;
       --muted:#9db0c2;
-      --ring:#1ad6b4;
       --radius:16px;
+      --game-w:450; /* nominal embed width */
+      --game-h:760; /* nominal embed height */
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -31,31 +32,28 @@
 
     header, footer{ padding: clamp(12px, 2vw, 24px); }
 
-    header{
-      display:flex; align-items:center; gap:12px;
-    }
-    .logo{
-      inline-size:36px; block-size:36px; border-radius:9px;
-      background: conic-gradient(from 180deg at 50% 50%, #1ad6b4, #7cf2e1, #0aa38a);
-      box-shadow: 0 0 0 2px #0aa38a22, 0 6px 24px #0aa38a33 inset;
-    }
+    header{ display:flex; align-items:center; gap:12px; }
+    .logo{ inline-size:36px; block-size:36px; border-radius:9px; background: conic-gradient(from 180deg at 50% 50%, #1ad6b4, #7cf2e1, #0aa38a); box-shadow: 0 0 0 2px #0aa38a22, 0 6px 24px #0aa38a33 inset; }
     h1{ margin:0; font-size: clamp(18px, 2.2vw, 22px); font-weight:650; letter-spacing:.2px; }
 
     main{ padding: clamp(10px, 2vw, 24px); }
-    .game-shell{ margin-inline:auto; max-inline-size:1280px; }
+    .game-shell{ margin-inline:auto; max-inline-size:1280px; display:grid; place-items:center; }
 
-    .ratio{
+    /*
+      Responsive scaler: always show full HEIGHT of the game.
+      - On phones: scales down to fit 100svh (no cropping, no internal scroll).
+      - On desktops: caps at 1:1 (760px tall), so it stays a tidy vertical panel.
+    */
+    .scale-wrap{ position:relative; display:block; }
+    .scaled-surface{
       position:relative;
-      inline-size:100%;
-      aspect-ratio:450 / 760; /* Match your embed dimensions */
-      background:var(--card);
-      border-radius:var(--radius);
-      overflow:clip;
-      box-shadow: 0 10px 30px #0008, 0 0 0 1px #ffffff10 inset;
+      inline-size: calc(var(--game-w) * 1px);
+      block-size: calc(var(--game-h) * 1px);
+      transform-origin: top left;
     }
-    .ratio iframe{
-      position:absolute; inset:0; inline-size:100%; block-size:100%;
-      border:0; background:#000;
+    .scaled-surface iframe{
+      position:absolute; inset:0; width:100%; height:100%; border:0; background:#000; border-radius:var(--radius);
+      box-shadow: 0 10px 30px #0008, 0 0 0 1px #ffffff10 inset;
     }
 
     footer{ color:var(--muted); font-size:14px; }
@@ -69,24 +67,47 @@
 
   <main>
     <div class="game-shell">
-      <div class="ratio" id="game">
-        <iframe
-          id="itch-iframe"
-          title="Itch.io game"
-          src="https://itch.io/embed-upload/14786185?color=8d8d8d"
-          allow="fullscreen; gamepad; xr-spatial-tracking; autoplay; clipboard-read; clipboard-write"
-          loading="lazy"
-          referrerpolicy="no-referrer">
-            <a href=https://ashcubed.itch.io/car-brand-racing-game?password=car">Play Car Game</a>
-        </iframe>
+      <div class="scale-wrap" aria-label="Game container">
+        <div class="scaled-surface" id="scaledSurface">
+          <iframe
+            id="itch-iframe"
+            title="Itch.io game"
+            src="https://itch.io/embed-upload/14786185?color=8d8d8d"
+            allow="fullscreen; gamepad; xr-spatial-tracking; autoplay; clipboard-read; clipboard-write"
+            loading="lazy"
+            referrerpolicy="no-referrer">
+              <a href="https://ashcubed.itch.io/car-brand-racing-game">Play Car Game</a>
+          </iframe>
+        </div>
       </div>
-      <p class="helper">This container is fully responsive (keeps 450×760 aspect ratio).</p>
+      <p class="helper">Always shows full game height. On mobile it scales to your viewport; on desktop it stays at a neat 760px tall.</p>
     </div>
   </main>
 
   <footer>
     <small>Works on mobile & desktop. To go full-bleed, remove header/footer and set the container to <code>100svh</code>.</small>
   </footer>
-</body>
+<script>
+    // Scale logic: keep full game height visible, cap at 1:1 on big screens.
+    const SURFACE_H = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--game-h')) || 760;
+    const SURFACE_W = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--game-w')) || 450;
+    const surface = document.getElementById('scaledSurface');
 
+    function applyScale(){
+      // Desired height is min(viewport height, native height)
+      const vh = Math.max(320, window.innerHeight);
+      const scale = Math.min(1, vh / SURFACE_H);
+      surface.style.transform = `scale(${scale})`;
+      // Reserve layout space so the scaled element is centered
+      const scaledW = Math.round(SURFACE_W * scale);
+      const scaledH = Math.round(SURFACE_H * scale);
+      surface.parentElement.style.width = scaledW + 'px';
+      surface.parentElement.style.height = scaledH + 'px';
+    }
+
+    addEventListener('resize', applyScale, {passive:true});
+    addEventListener('orientationchange', applyScale, {passive:true});
+    applyScale();
+  </script>
+</body>
 </html>
