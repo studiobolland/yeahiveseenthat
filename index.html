@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Play – Itch.io Embed</title>
+  <meta name="description" content="A minimal, fully responsive shell to embed an itch.io game." />
+  <link rel="icon" href="/favicon.ico" />
+  <style>
+    :root{
+      --bg:#0b0d10;
+      --card:#131922;
+      --fg:#e9eef3;
+      --muted:#9db0c2;
+      --ring:#1ad6b4;
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      min-height:100svh;
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+      background:var(--bg);
+      color:var(--fg);
+      font: 500 16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, "Noto Color Emoji", "Apple Color Emoji", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    header, footer{ padding: clamp(12px, 2vw, 24px); }
+
+    header{
+      display:flex; align-items:center; gap:12px;
+    }
+    .logo{
+      inline-size:36px; block-size:36px; border-radius:9px;
+      background: conic-gradient(from 180deg at 50% 50%, #1ad6b4, #7cf2e1, #0aa38a);
+      box-shadow: 0 0 0 2px #0aa38a22, 0 6px 24px #0aa38a33 inset;
+    }
+    h1{ margin:0; font-size: clamp(18px, 2.2vw, 22px); font-weight:650; letter-spacing:.2px; }
+
+    main{ padding: clamp(10px, 2vw, 24px); }
+    .game-shell{ margin-inline:auto; max-inline-size:1280px; }
+
+    .ratio{
+      position:relative;
+      inline-size:100%;
+      aspect-ratio:450 / 760; /* Match your embed dimensions */
+      background:var(--card);
+      border-radius:var(--radius);
+      overflow:clip;
+      box-shadow: 0 10px 30px #0008, 0 0 0 1px #ffffff10 inset;
+    }
+    .ratio iframe{
+      position:absolute; inset:0; inline-size:100%; block-size:100%;
+      border:0; background:#000;
+    }
+
+    footer{ color:var(--muted); font-size:14px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo" aria-hidden="true"></div>
+    <h1>Yeah I've Seen That</h1>
+  </header>
+
+  <main>
+    <div class="game-shell">
+      <div class="ratio" id="game">
+        <iframe
+          id="itch-iframe"
+          title="Itch.io game"
+          src="https://itch.io/embed-upload/9817030?color=E2D8C5"
+          allow="fullscreen; gamepad; xr-spatial-tracking; autoplay; clipboard-read; clipboard-write"
+          loading="lazy"
+          referrerpolicy="no-referrer">
+            <a href="https://hellostudiobo.itch.io/yeah-ive-seen-that">Play Yeah I've Seen That on itch.io</a>
+        </iframe>
+      </div>
+      <p class="helper">This container is fully responsive (keeps 450×760 aspect ratio).</p>
+    </div>
+  </main>
+
+  <footer>
+    <small>Works on mobile & desktop. To go full-bleed, remove header/footer and set the container to <code>100svh</code>.</small>
+  </footer>
+</body>
+</html>
