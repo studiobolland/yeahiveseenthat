@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Play – Itch.io Embed</title>
+  <title>Chery Game</title>
   <meta name="description" content="A minimal, fully responsive shell to embed an itch.io game." />
   <link rel="icon" href="/favicon.ico" />
   <style>
@@ -71,7 +71,7 @@
         <div class="scaled-surface" id="scaledSurface">
           <iframe
             id="itch-iframe"
-            title="Itch.io game"
+            title="Chery Game"
             src="https://itch.io/embed-upload/14786185?color=8d8d8d"
             allow="fullscreen; gamepad; xr-spatial-tracking; autoplay; clipboard-read; clipboard-write"
             loading="lazy"
@@ -80,13 +80,10 @@
           </iframe>
         </div>
       </div>
-      //<p class="helper">Always shows full game height. On mobile it scales to your viewport; on desktop it stays at a neat 760px tall.</p>
     </div>
   </main>
 
-  <footer>
- //   <small>Works on mobile & desktop. To go full-bleed, remove header/footer and set the container to <code>100svh</code>.</small>
-  </footer>
+
 <script>
     // Scale logic: keep full game height visible, cap at 1:1 on big screens.
     const SURFACE_H = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--game-h')) || 760;
@@ -111,4 +108,5 @@
   </script>
 </body>
 </html>
+
 
